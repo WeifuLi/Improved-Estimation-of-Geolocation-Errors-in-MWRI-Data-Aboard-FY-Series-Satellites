@@ -6,7 +6,7 @@ Dir=dir([AscendPath, '*.hdf']);
 load TruthCoastline1;
 TruthCoastline=TruthCoastline1;
 load TruthCoastline2;
-TruthCoastline=[TruthCoastline TruthCoastline2];
+TruthCoastline=[TruthCoastline; TruthCoastline2];
 TotalErrors=[];
 for i=1:length(Dir)
     data=hdf5info([AscendPath Dir(i).name]);
