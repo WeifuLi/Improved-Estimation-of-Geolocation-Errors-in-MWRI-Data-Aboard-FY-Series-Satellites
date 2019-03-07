@@ -1,9 +1,12 @@
 clc;clear;close all;
-RegionName='Àû±ÈÑÇ';
+RegionName='åˆ©æ¯”äºš';
 AscendPath=[RegionName '\'];
 TifPath='.\';
 Dir=dir([AscendPath, '*.hdf']);
-load TruthCoastline;
+load TruthCoastline1;
+TruthCoastline=TruthCoastline1;
+load TruthCoastline2;
+TruthCoastline=[TruthCoastline TruthCoastline2];
 TotalErrors=[];
 for i=1:length(Dir)
     data=hdf5info([AscendPath Dir(i).name]);
@@ -12,7 +15,7 @@ for i=1:length(Dir)
     Longitude=double(hdf5read(data.GroupHierarchy.Groups(2).Datasets(2)));
     ObserveData=hdf5read(data.GroupHierarchy.Groups(1).Datasets(2));
     ObserveData=double(ObserveData(:,:,10));
-    ObserveData=double(ObserveData)*0.01+327.68;%×ª±äÎªÕıÖµ
+    ObserveData=double(ObserveData)*0.01+327.68;%è½¬å˜ä¸ºæ­£å€¼
     
     Filename=data.Filename;
     DATA.Latitude=Latitude;
@@ -28,8 +31,8 @@ for i=1:length(Dir)
     axis([-0.16 0.16 -0.16 0.16]);
     xlabel('Cross-track');ylabel('Along-track');
     grid on;
-    title(['µãµÄ¸öÊı' num2str(size(Errors,1)) '; ĞŞÕıÇ°: lat£º ' num2str(mean(Errors(:,1)),2), '  Lon: ' num2str(mean(Errors(:,2)),2) ]);
-    saveas(gcf,[TifPath, RegionName Dir(i).name(1:end-4) 'ĞŞÕıÇ°.tif'  ]);
+    title(['ç‚¹çš„ä¸ªæ•°' num2str(size(Errors,1)) '; ä¿®æ­£å‰: latï¼š ' num2str(mean(Errors(:,1)),2), '  Lon: ' num2str(mean(Errors(:,2)),2) ]);
+    saveas(gcf,[TifPath, RegionName Dir(i).name(1:end-4) 'ä¿®æ­£å‰.tif'  ]);
     save ([AscendPath, Dir(i).name(1:end-4) '.mat'], 'Errors') ;
     TotalErrors=[TotalErrors; Errors i*ones(size(Errors,1),1)];
 end
@@ -39,7 +42,7 @@ hold on;scatter(mean(TotalErrors(:,2)),mean(TotalErrors(:,1)),'r*','LineWidth',1
 axis([-0.1 0.1 -0.1 0.1]);     xlabel('Cross-track');ylabel('Along-track');
 grid on;
 
-% ÖÊÁ¿¼ìÑé  Ïû³ı¹ÂÁ¢µã
+% è´¨é‡æ£€éªŒ  æ¶ˆé™¤å­¤ç«‹ç‚¹
 TotalErrors=TotalErrors(:,1:2);
 Mean=mean(TotalErrors);
 Delta=sqrt(sum((TotalErrors-Mean).^2,2));
